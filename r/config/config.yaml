@@ -1,0 +1,64 @@
+# Analysis settings for MALDI gum taxonomy pipeline
+# Edit these values without changing any R code.
+
+data_dir: "."
+
+output_dir: "r/output"
+
+# Folders to ignore when scanning for sample groups
+exclude_dirs:
+  - resources
+  - icoshift3p0
+  - .git
+  - r
+  - app
+  - output
+
+blank_pattern: "^Blank"
+
+# Sample index to drop (matches Analysis.m filenames(5) removal)
+drop_sample_index: 5
+
+# Group folder order defines numeric group IDs (1st folder = 1, 2nd = 2, ...)
+# Reference samples for peak width: groups 3, 4, and 6 in the original study
+reference_groups: [3, 4, 6]
+
+# m/z interpolation grid (matches MATLAB xq = 800:0.01:1300)
+mz_min: 800
+mz_max: 1300
+mz_step: 0.01
+
+# icoshift settings (matches icoshift('median', vq2, 'whole', 34))
+alignment_target: median
+alignment_mode: whole
+max_shift: 34
+
+peak_prominence_factor: 10
+n_blank_samples: 4
+
+# Group IDs from folder order in the original dataset
+acacia_group_id: 3
+historical_group_id: 7
+pigmented_group_id: 5
+exclude_group_id: 7
+
+# Manual class label fixes from Analysis.m
+manual_class_overrides:
+  "39": seyal
+  "50": stenocarpa
+
+drop_acacia_index: 20
+drop_historical_index: [6, 9, 10]
+
+similarity_type: Pei1
+
+save_alignment_plot: true
+save_snv_plot: true
+
+pca_pairs:
+  - [1, 2]
+  - [1, 3]
+  - [1, 4]
+  - [2, 3]
+  - [2, 4]
+  - [3, 4]

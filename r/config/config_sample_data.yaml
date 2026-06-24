@@ -1,0 +1,59 @@
+# Config for the sample data in "Gums files.zip"
+# Folder order (alphabetical, matching MATLAB dir()):
+#   1 = Blanks
+#   2 = Historical samples
+#   3 = Pigmented references
+#   4 = Reference samples (Acacia)
+
+data_dir: "sample_data"
+output_dir: "r/output_sample_data"
+export_validation: true
+validation_dir: "validation/r"
+
+exclude_dirs:
+  - resources
+  - icoshift3p0
+  - .git
+  - r
+  - app
+  - output
+  - output_sample_data
+  - validation
+  - test_data
+
+drop_sample_index: 5
+reference_groups: [4]
+acacia_group_id: 4
+historical_group_id: 2
+pigmented_group_id: 3
+exclude_group_id: 2
+
+mz_min: 800
+mz_max: 1300
+mz_step: 0.01
+
+alignment_target: median
+alignment_mode: whole
+max_shift: 34
+
+peak_prominence_factor: 10
+n_blank_samples: 4
+
+manual_class_overrides:
+  "39": seyal
+  "50": stenocarpa
+
+drop_acacia_index: 20
+drop_historical_index: [6, 9, 10]
+
+similarity_type: Pei1
+save_alignment_plot: true
+save_snv_plot: true
+
+pca_pairs:
+  - [1, 2]
+  - [1, 3]
+  - [1, 4]
+  - [2, 3]
+  - [2, 4]
+  - [3, 4]

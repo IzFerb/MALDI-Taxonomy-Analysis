@@ -1,0 +1,22 @@
+# Large data — host elsewhere and link in README
+sample_data/
+test_data/
+Gums files.zip
+Blank *.txt
+
+# Generated outputs
+r/output/
+r/output_test/
+r/output_sample_data/
+validation/r/
+validation/matlab/
+
+# MATLAB IDE metadata
+resources/
+*.prj
+
+# R / macOS session files
+.RData
+.Rhistory
+.DS_Store
+**/.Rhistory
