@@ -14,6 +14,7 @@ if (!file.exists(config_path)) {
   stop("Config file not found: ", config_path)
 }
 
+.r_pipeline_dir <- file.path("r", "R")
 source(file.path("r", "R", "run_pipeline.R"), local = FALSE)
 
 if (!requireNamespace("ggplot2", quietly = TRUE)) {

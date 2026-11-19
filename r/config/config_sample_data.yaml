@@ -21,7 +21,7 @@ exclude_dirs:
   - validation
   - test_data
 
-drop_sample_index: 5
+# drop_sample_index: 5   # (optional, off by default) skip a sample by position
 reference_groups: [4]
 acacia_group_id: 4
 historical_group_id: 2
@@ -39,12 +39,12 @@ max_shift: 34
 peak_prominence_factor: 10
 n_blank_samples: 4
 
-manual_class_overrides:
-  "39": seyal
-  "50": stenocarpa
-
-drop_acacia_index: 20
-drop_historical_index: [6, 9, 10]
+# Position-based skips/overrides from the MATLAB script were removed: they
+# depend on file order and silently drop the wrong samples with new data.
+# Species labels are read from the filenames. Optional (off by default):
+#   manual_class_overrides: {"39": seyal}
+#   drop_acacia_index: [20]
+#   drop_historical_index: [6, 9, 10]
 
 similarity_type: Pei1
 save_alignment_plot: true

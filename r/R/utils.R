@@ -32,12 +32,14 @@ read_spectrum_txt <- function(path) {
   list(mz = dat[[1]], intensity = dat[[2]])
 }
 
+# Species label = the word right after "Acacia" (separated by "_" or a space),
+# case-insensitive, returned in lowercase. E.g.
+#   "SEN_A_Acacia_senegal_F_123.txt"      -> "senegal"
+#   "SEY_C_Acacia seyal_K_78685.txt"      -> "seyal"
+#   "STEN_B_Acacia_Stenocarpa_F_269.txt"  -> "stenocarpa"
 parse_class_from_filename <- function(filename, anchor = "Acacia") {
-  pos <- regexpr(anchor, filename, fixed = TRUE)
-  if (pos[1] == -1L) return(NA_character_)
-  k <- pos[1]
-  parts <- gregexpr("_", filename, fixed = TRUE)[[1]]
-  parts <- parts[parts > k]
-  if (length(parts) < 2L) return(NA_character_)
-  substr(filename, parts[1] + 1L, parts[2] - 1L)
+  pattern <- paste0(anchor, "[_ ]+([^_ .]+)")
+  m <- regmatches(filename, regexec(pattern, filename, ignore.case = TRUE))[[1]]
+  if (length(m) < 2L) return(NA_character_)
+  tolower(m[2])
 }

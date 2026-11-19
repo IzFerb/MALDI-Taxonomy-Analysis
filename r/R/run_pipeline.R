@@ -6,7 +6,9 @@
   args <- commandArgs(trailingOnly = FALSE)
   file_arg <- grep("^--file=", args, value = TRUE)
   if (length(file_arg)) {
-    return(dirname(normalizePath(sub("^--file=", "", file_arg[1]))))
+    cand <- dirname(normalizePath(sub("^--file=", "", file_arg[1]), mustWork = FALSE))
+    # Only auto-load when the running script lives next to the pipeline files
+    if (file.exists(file.path(cand, "load_spectra.R"))) return(cand)
   }
   NA_character_
 })
@@ -82,9 +84,12 @@ run_maldi_pipeline <- function(
     )
   }
 
-  drop_idx <- cfg$drop_sample_index %||% 5L
-  if (drop_idx <= length(meta$filenames)) {
-    keep <- seq_along(meta$filenames) != drop_idx
+  # Optional position-based skips (off by default; only use for a fixed, known dataset)
+  drop_idx <- as.integer(unlist(cfg$drop_sample_index))
+  drop_idx <- drop_idx[!is.na(drop_idx) & drop_idx > 0L & drop_idx <= length(meta$filenames)]
+  if (length(drop_idx) > 0L) {
+    keep <- !(seq_along(meta$filenames) %in% drop_idx)
+    if (verbose) message("Skipping by position (config): ", paste(meta$filenames[!keep], collapse = ", "))
     meta$filenames <- meta$filenames[keep]
     meta$group_ids <- meta$group_ids[keep]
   }
@@ -166,12 +171,14 @@ run_maldi_pipeline <- function(
   manual <- cfg$manual_class_overrides %||% list()
   for (nm in names(manual)) {
     idx <- as.integer(nm)
-    if (idx <= length(class_labels)) class_labels[idx] <- manual[[nm]]
+    if (!is.na(idx) && idx <= length(class_labels)) class_labels[idx] <- manual[[nm]]
   }
 
-  drop_acacia <- cfg$drop_acacia_index %||% 20L
-  if (drop_acacia <= length(class_labels)) {
-    keep_a <- seq_along(class_labels) != drop_acacia
+  drop_acacia <- as.integer(unlist(cfg$drop_acacia_index))
+  drop_acacia <- drop_acacia[!is.na(drop_acacia) & drop_acacia > 0L & drop_acacia <= length(class_labels)]
+  if (length(drop_acacia) > 0L) {
+    keep_a <- !(seq_along(class_labels) %in% drop_acacia)
+    if (verbose) message("Skipping Acacia samples by position (config): ", paste(fn_acacia[!keep_a], collapse = ", "))
     z_acacia <- z_acacia[keep_a, , drop = FALSE]
     class_labels <- class_labels[keep_a]
     fn_acacia <- fn_acacia[keep_a]
@@ -219,7 +226,8 @@ run_maldi_pipeline <- function(
   hist_idx <- which(meta$group_ids == historical_group)
   if (length(hist_idx) > 0L) {
     z_hist <- z[hist_idx, , drop = FALSE]
-    drop_hist <- cfg$drop_historical_index %||% c(6L, 9L, 10L)
+    drop_hist <- as.integer(unlist(cfg$drop_historical_index))
+    drop_hist <- drop_hist[!is.na(drop_hist) & drop_hist > 0L]
     keep_h <- seq_len(nrow(z_hist)) %notin% drop_hist
     z_hist <- z_hist[keep_h, , drop = FALSE]
 

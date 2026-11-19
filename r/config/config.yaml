@@ -17,7 +17,7 @@ exclude_dirs:
 blank_pattern: "^Blank"
 
 # Sample index to drop (matches Analysis.m filenames(5) removal)
-drop_sample_index: 5
+# drop_sample_index: 5   # (optional, off by default) original Analysis.m dropped #5
 
 # Group folder order defines numeric group IDs (1st folder = 1, 2nd = 2, ...)
 # Reference samples for peak width: groups 3, 4, and 6 in the original study
@@ -43,12 +43,11 @@ pigmented_group_id: 5
 exclude_group_id: 7
 
 # Manual class label fixes from Analysis.m
-manual_class_overrides:
-  "39": seyal
-  "50": stenocarpa
-
-drop_acacia_index: 20
-drop_historical_index: [6, 9, 10]
+# Position-based skips/overrides were removed (off by default); labels are read
+# from filenames. Optional:
+#   manual_class_overrides: {"39": seyal}
+#   drop_acacia_index: [20]
+#   drop_historical_index: [6, 9, 10]
 
 similarity_type: Pei1
 
